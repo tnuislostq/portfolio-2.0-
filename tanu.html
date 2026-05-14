@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Contact — Tanu</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0a0a;
+      --surface: #111111;
+      --border: #1e1e1e;
+      --accent: #c8f135;
+      --accent2: #f1c035;
+      --text: #f0f0f0;
+      --muted: #666;
+      --font-display: 'Syne', sans-serif;
+      --font-body: 'DM Sans', sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-weight: 300;
+      line-height: 1.6;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 1.2rem 5vw;
+      backdrop-filter: blur(16px);
+      background: rgba(10,10,10,0.85);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo {
+      font-family: var(--font-display);
+      font-weight: 800; font-size: 1.2rem;
+      letter-spacing: -0.03em; color: var(--accent);
+      text-decoration: none;
+    }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a {
+      color: var(--muted); text-decoration: none;
+      font-size: 0.85rem; letter-spacing: 0.08em;
+      text-transform: uppercase; transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--text); }
+    .nav-links a.active { color: var(--accent); }
+    .hamburger {
+      display: none; flex-direction: column; gap: 5px;
+      cursor: pointer; background: none; border: none; padding: 4px;
+    }
+    .hamburger span { display: block; width: 24px; height: 2px; background: var(--text); }
+    .mobile-menu {
+      display: none;
+      position: fixed; top: 64px; left: 0; right: 0; z-index: 99;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 1.5rem 5vw;
+      flex-direction: column; gap: 1.2rem;
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a {
+      color: var(--text); text-decoration: none;
+      font-size: 1.1rem; font-family: var(--font-display); font-weight: 600;
+    }
+
+    /* PAGE */
+    .contact-page {
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      padding: 120px 5vw 6rem;
+    }
+    .page-label {
+      font-size: 0.75rem; letter-spacing: 0.15em;
+      text-transform: uppercase; color: var(--accent);
+      margin-bottom: 1rem; font-weight: 500;
+      animation: fadeUp 0.5s ease both;
+    }
+    .page-title {
+      font-family: var(--font-display);
+      font-size: clamp(2.5rem, 8vw, 6rem);
+      font-weight: 800; letter-spacing: -0.04em;
+      line-height: 1.0; margin-bottom: 1.5rem;
+      animation: fadeUp 0.6s 0.05s ease both;
+    }
+    .page-subtitle {
+      color: var(--muted); max-width: 500px;
+      font-size: 1rem; line-height: 1.75;
+      margin-bottom: 4rem;
+      animation: fadeUp 0.6s 0.1s ease both;
+    }
+
+    /* CONTACT GRID */
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 4rem;
+      animation: fadeUp 0.6s 0.15s ease both;
+    }
+
+    /* CONTACT LINKS */
+    .contact-channels { display: flex; flex-direction: column; gap: 1.2rem; }
+    .channel-card {
+      display: flex; align-items: center; gap: 1.2rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 0.75rem;
+      padding: 1.25rem 1.5rem;
+      text-decoration: none;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .channel-card:hover { border-color: var(--accent); transform: translateX(6px); }
+    .channel-icon {
+      width: 44px; height: 44px; border-radius: 0.5rem;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.3rem;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    .channel-info { flex: 1; }
+    .channel-label { font-size: 0.75rem; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; }
+    .channel-value { color: var(--text); font-size: 0.95rem; font-weight: 400; margin-top: 0.1rem; }
+    .channel-arrow { color: var(--muted); font-size: 1.1rem; }
+
+    .availability-badge {
+      display: inline-flex; align-items: center; gap: 0.6rem;
+      background: rgba(200,241,53,0.08);
+      border: 1px solid rgba(200,241,53,0.2);
+      border-radius: 0.5rem;
+      padding: 1rem 1.5rem;
+      margin-top: 0.5rem;
+    }
+    .avail-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--accent);
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(200,241,53,0.4); }
+      50% { opacity: 0.7; box-shadow: 0 0 0 6px rgba(200,241,53,0); }
+    }
+    .avail-text { color: var(--accent); font-size: 0.85rem; font-weight: 500; }
+
+    /* FORM */
+    .contact-form { display: flex; flex-direction: column; gap: 1.2rem; }
+    .form-group { display: flex; flex-direction: column; gap: 0.5rem; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
+    label { font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+    input, textarea, select {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      padding: 0.85rem 1rem;
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      font-weight: 300;
+      outline: none;
+      transition: border-color 0.2s;
+      width: 100%;
+    }
+    input:focus, textarea:focus { border-color: var(--accent); }
+    textarea { resize: vertical; min-height: 130px; }
+    input::placeholder, textarea::placeholder { color: var(--muted); }
+    .form-submit {
+      background: var(--accent);
+      color: #0a0a0a;
+      padding: 1rem 2rem;
+      border: none; border-radius: 0.4rem;
+      font-family: var(--font-display);
+      font-size: 0.95rem; font-weight: 700;
+      cursor: pointer; letter-spacing: 0.02em;
+      transition: background 0.2s, transform 0.2s;
+      width: 100%;
+    }
+    .form-submit:hover { background: var(--accent2); transform: translateY(-2px); }
+    .success-msg {
+      display: none;
+      background: rgba(200,241,53,0.08);
+      border: 1px solid rgba(200,241,53,0.2);
+      border-radius: 0.5rem;
+      padding: 1rem 1.5rem;
+      color: var(--accent);
+      font-size: 0.9rem;
+      text-align: center;
+    }
+
+    /* FOOTER */
+    .footer-strip {
+      border-top: 1px solid var(--border);
+      padding: 2rem 5vw;
+      display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: 1rem;
+      margin-top: 4rem;
+    }
+    .footer-strip p { color: var(--muted); font-size: 0.82rem; }
+    .footer-nav { display: flex; gap: 1.5rem; }
+    .footer-nav a {
+      color: var(--muted); text-decoration: none; font-size: 0.82rem;
+      transition: color 0.2s;
+    }
+    .footer-nav a:hover { color: var(--text); }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .hamburger { display: flex; }
+      .contact-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+      .form-row { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 480px) {
+      .page-title { font-size: clamp(2.5rem, 13vw, 4rem); }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">Tanu.</a>
+  <ul class="nav-links">
+    <li><a href="index.html#about">About</a></li>
+    <li><a href="index.html#skills">Skills</a></li>
+    <li><a href="index.html#projects">Projects</a></li>
+    <li><a href="contact.html" class="active">Contact</a></li>
+  </ul>
+  <button class="hamburger" onclick="toggleMenu()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="index.html#about" onclick="toggleMenu()">About</a>
+  <a href="index.html#skills" onclick="toggleMenu()">Skills</a>
+  <a href="index.html#projects" onclick="toggleMenu()">Projects</a>
+  <a href="contact.html">Contact</a>
+</div>
+
+<div class="contact-page">
+  <p class="page-label">Get In Touch</p>
+  <h1 class="page-title">Let's work<br>together.</h1>
+  <p class="page-subtitle">I'm currently open to internships, freelance projects, and junior developer roles. Whether you have an opportunity or just want to say hi — drop me a message!</p>
+
+  <div class="contact-grid">
+    <!-- LEFT: Channels -->
+    <div>
+      <div class="contact-channels">
+        <a href="mailto:your@email.com" class="channel-card">
+          <div class="channel-icon">✉️</div>
+          <div class="channel-info">
+            <div class="channel-label">Email</div>
+            <div class="channel-value">your@email.com</div>
+          </div>
+          <div class="channel-arrow">→</div>
+        </a>
+        <a href="https://github.com/yourusername" target="_blank" class="channel-card">
+          <div class="channel-icon">🐙</div>
+          <div class="channel-info">
+            <div class="channel-label">GitHub</div>
+            <div class="channel-value">github.com/yourusername</div>
+          </div>
+          <div class="channel-arrow">→</div>
+        </a>
+        <a href="https://linkedin.com/in/yourusername" target="_blank" class="channel-card">
+          <div class="channel-icon">💼</div>
+          <div class="channel-info">
+            <div class="channel-label">LinkedIn</div>
+            <div class="channel-value">linkedin.com/in/yourusername</div>
+          </div>
+          <div class="channel-arrow">→</div>
+        </a>
+      </div>
+
+      <div class="availability-badge" style="margin-top:1.5rem">
+        <div class="avail-dot"></div>
+        <div class="avail-text">Available for opportunities right now</div>
+      </div>
+    </div>
+
+    <!-- RIGHT: Form -->
+    <div class="contact-form">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="name">Your Name</label>
+          <input type="text" id="name" placeholder="John Smith" />
+        </div>
+        <div class="form-group">
+          <label for="email">Your Email</label>
+          <input type="email" id="email" placeholder="john@example.com" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="subject">Subject</label>
+        <input type="text" id="subject" placeholder="Job opportunity / Freelance project / Just saying hi" />
+      </div>
+      <div class="form-group">
+        <label for="message">Message</label>
+        <textarea id="message" placeholder="Tell me about the opportunity or project..."></textarea>
+      </div>
+      <button class="form-submit" onclick="handleSubmit()">Send Message →</button>
+      <div class="success-msg" id="successMsg">
+        ✓ Message sent! I'll get back to you soon.
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="footer-strip">
+  <p>© 2025 Tanu. Built with HTML, CSS & JavaScript.</p>
+  <nav class="footer-nav">
+    <a href="index.html#about">About</a>
+    <a href="index.html#skills">Skills</a>
+    <a href="index.html#projects">Projects</a>
+    <a href="contact.html">Contact</a>
+  </nav>
+</div>
+
+<script>
+  function toggleMenu() {
+    document.getElementById('mobileMenu').classList.toggle('open');
+  }
+  function handleSubmit() {
+    const name = document.getElementById('name').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const message = document.getElementById('message').value.trim();
+    if (!name || !email || !message) {
+      alert('Please fill in your name, email, and message.');
+      return;
+    }
+    document.getElementById('successMsg').style.display = 'block';
+    document.getElementById('name').value = '';
+    document.getElementById('email').value = '';
+    document.getElementById('subject').value = '';
+    document.getElementById('message').value = '';
+  }
+</script>
+</body>
+</html>
